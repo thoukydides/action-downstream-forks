@@ -31693,10 +31693,10 @@ function forksAheadToMarkdown(forksAhead) {
     const lines = [];
     for (const fork of forksAhead) {
         // Header for this fork
-        lines.push('---', '', `### [${fork.fork}](${fork.url})`);
+        lines.push('---', '', `### [${fork.fork}](${fork.url})`, '');
         // List of branches
         for (const branch of fork.branches) {
-            lines.push(`- **[${branch.branch}](${branch.url})**`, `  - ${plural(branch.ahead_by, 'commit')} ahead, ${plural(branch.behind_by, 'commit')} behind`, `  - Updated ${relativeDateString(branch.updated_at)}`);
+            lines.push(`- **[${branch.branch}](${branch.url})**`, `    - ${plural(branch.ahead_by, 'commit')} ahead, ${plural(branch.behind_by, 'commit')} behind`, `    - Updated ${relativeDateString(branch.updated_at)}`, '');
         }
     }
     lines.push('---');
