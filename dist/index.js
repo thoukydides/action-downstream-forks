@@ -31556,6 +31556,10 @@ function isValidDate(date) {
 
 // GitHub action
 // Copyright © 2026 Alexander Thoukydides
+// Branch names to exclude
+const EXCLUDED_BRANCHES = [
+    /^dependabot\//i
+];
 // Retrieve the list of forks and branches that are ahead of the base repository
 // (forks and branches are both sorted by most recently updated first)
 async function getForksAhead(github, repository, subForks) {
@@ -31590,6 +31594,11 @@ async function getForksAhead(github, repository, subForks) {
         const branchesAhead = [];
         for (const forkBranch of forkBranches) {
             try {
+                // Skip excluded branches
+                if (EXCLUDED_BRANCHES.some((re) => re.test(forkBranch.name))) {
+                    coreExports.info(`Skipping excluded branch: ${fork.full_name}:${forkBranch.name}`);
+                    continue;
+                }
                 const basehead = `${baseBranch}...${fork.owner.login}:${forkBranch.name}`;
                 const compare = (await github.rest.repos.compareCommitsWithBasehead({ ...baseRepo, basehead })).data;
                 coreExports.info(`Fork ${fork.full_name}:${forkBranch.name} is ${compare.status}`
