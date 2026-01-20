@@ -31687,19 +31687,19 @@ function isSameDay(date1, date2) {
 // Convert the list of forks ahead into a markdown table
 function forksAheadToMarkdown(forksAhead) {
     if (forksAhead.length === 0) {
-        return 'No forks are ahead of the base repository.';
+        return 'No forks are ahead of the base repository';
     }
-    // Table header
+    // Output a markdown block for each fork
     const lines = [];
-    lines.push('| Fork | Branches | Last Commit |');
-    lines.push('| ---- | -------- | ----------- |');
-    // Table rows
     for (const fork of forksAhead) {
-        const forkLink = `[${fork.fork}](${fork.url})`;
-        const branches = fork.branches.map(branch => `[${branch.branch}](${branch.url}) (${plural(branch.ahead_by, 'commit')} ahead, ${plural(branch.behind_by, 'commit')} behind)`);
-        const updated = `Updated ${relativeDateString(fork.updated_at)}`;
-        lines.push(`| ${forkLink} | ${branches.join('<br>')} | ${updated} |`);
+        // Header for this fork
+        lines.push('---', '', `### [${fork.fork}](${fork.url})`);
+        // List of branches
+        for (const branch of fork.branches) {
+            lines.push(`- **[${branch.branch}](${branch.url})**`, `  - ${plural(branch.ahead_by, 'commit')} ahead, ${plural(branch.behind_by, 'commit')} behind`, `  - Updated ${relativeDateString(branch.updated_at)}`);
+        }
     }
+    lines.push('---');
     return lines.join('\n');
 }
 
