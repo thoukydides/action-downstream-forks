@@ -1,0 +1,32 @@
+name: Downstream Forks
+author: Alexander Thoukydides
+description: Identify forks with commits ahead of the base repository
+branding:
+  icon: 'git-branch'
+  color: 'red'
+
+inputs:
+  repository:
+    description: The base repository in the format 'owner/repo'
+    type: string
+    default: ${{ github.repository }}
+  sub_forks:
+    description: Whether to include forks of forks when checking for downstream commits
+    type: boolean
+    default: true
+  github_token:
+    description: The GitHub token used to create an authenticated client
+    type: string
+    default: ${{ github.token }}
+
+outputs:
+  updated_at:
+    description: The most recent update date (ISO format) among the downstream forks with commits ahead of the base repository (empty string if none)
+  json:
+    description: JSON array of downstream forks with commits ahead of the base repository (empty array if none)
+  markdown:
+    description: Markdown table of downstream forks with commits ahead of the base repository
+
+runs:
+  using: node20
+  main: dist/index.js
