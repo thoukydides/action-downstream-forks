@@ -20,6 +20,11 @@ export interface ForkAhead {
     branches:   ForkBranchAhead[];
 }
 
+// Branch names to exclude
+const EXCLUDED_BRANCHES: RegExp[] = [
+    /^dependabot\//i
+];
+
 // Retrieve the list of forks and branches that are ahead of the base repository
 // (forks and branches are both sorted by most recently updated first)
 export async function getForksAhead(github: InstanceType<typeof GitHub>, repository: string, subForks: boolean): Promise<ForkAhead[]> {
@@ -59,6 +64,12 @@ export async function getForksAhead(github: InstanceType<typeof GitHub>, reposit
         const branchesAhead: ForkBranchAhead[] = [];
         for (const forkBranch of forkBranches) {
             try {
+                // Skip excluded branches
+                if (EXCLUDED_BRANCHES.some((re) => re.test(forkBranch.name))) {
+                    core.info(`Skipping excluded branch: ${fork.full_name}:${forkBranch.name}`);
+                    continue;
+                }
+
                 const basehead = `${baseBranch}...${fork.owner.login}:${forkBranch.name}`;
                 const compare = (await github.rest.repos.compareCommitsWithBasehead({ ...baseRepo, basehead })).data;
                 core.info(`Fork ${fork.full_name}:${forkBranch.name} is ${compare.status}`
