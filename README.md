@@ -8,7 +8,7 @@ This action identifies forks that have commits ahead of the base repository.
 ## Prerequisites
 
 Before using this workflow, ensure:
-- The workflow has `contents: read` and `metadata: read` permissions (either via the default `GITHUB_TOKEN` or a fine-grained token).
+- The workflow has `contents: read` permission (either via the default `GITHUB_TOKEN` or a fine-grained token).
 
 ## Inputs
 
@@ -38,7 +38,6 @@ Example workflow to add a summary of downstream forks to the workflow summary:
 name: Downstream Forks Report
 permissions:
   contents: read
-  metadata: read
 
 on:
   workflow_dispatch:
