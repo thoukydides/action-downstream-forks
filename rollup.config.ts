@@ -8,15 +8,14 @@ const commonjs = _commonjs as unknown as (options?: RollupCommonJSOptions) => Pl
 const typescript = _typescript as unknown as (options?: RollupTypescriptOptions) => Plugin;
 
 // https://github.com/rollup/rollup/issues/1089
+const IGNORE_WARNINGS: Record<string, string[]> = {
+    CIRCULAR_DEPENDENCY: ['@actions'],
+    THIS_IS_UNDEFINED:   ['@actions']
+};
 const onwarn = (warning: RollupLog, defaultHandler: (warning: string | RollupLog) => void): void => {
-    const ids = [...(warning.ids ?? []), ...(warning.id ? [warning.id] : [])];
-    if (ids.some(p => p.includes('/node_modules/@actions/'))
-        && ['CIRCULAR_DEPENDENCY', 'THIS_IS_UNDEFINED'].includes(warning.code ?? '')) {
-        // Suppress undefined this and circular dependency warnings for @actions/*
-    } else {
-        console.log(JSON.stringify({ ids, code: warning.code }));
-        defaultHandler(warning);
-    }
+    const includesModule = (module: string): boolean =>
+        [...warning.ids ?? [], warning.id].some(id => id?.includes(`/node_modules/${module}/`));
+    if (!IGNORE_WARNINGS[warning.code ?? '']?.some(includesModule)) defaultHandler(warning);
 };
 
 const config: RollupOptions = {
