@@ -28,5 +28,5 @@ outputs:
     description: Markdown table of downstream forks with commits ahead of the base repository
 
 runs:
-  using: node20
+  using: node24
   main: dist/index.js
