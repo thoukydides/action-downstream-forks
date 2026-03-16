@@ -3,7 +3,7 @@
 
 import * as core from '@actions/core';
 import { assertIsDefined, isValidDate, plural } from './utils.js';
-import { GitHub } from '@actions/github/lib/utils.js';
+import { GitHub } from '@actions/github/lib/utils';
 
 // Details of a fork that is ahead of the base repository
 export interface ForkBranchAhead {

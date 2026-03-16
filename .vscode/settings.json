@@ -12,6 +12,7 @@
         "basehead",
         "buymeacoffee",
         "color",
+        "onwarn",
         "Thoukydides"
     ],
     "files.exclude": {
